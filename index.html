@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Валера & Алина — 27.08.2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Nunito+Sans:wght@200;300;400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #0e0d0b;
+      --paper: #f7f4ee;
+      --paper2: #f0ece3;
+      --linen: #e8e2d6;
+      --stone: #b8af9e;
+      --copper: #b5763a;
+      --copper-pale: #d9a96a;
+      --mist: #9aab9a;
+      --mist-dark: #607060;
+      --white: #fdfcf9;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'Nunito Sans', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    /* Custom cursor */
+    .cursor {
+      position: fixed;
+      width: 8px; height: 8px;
+      background: var(--copper);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s, width 0.3s, height 0.3s, background 0.3s;
+    }
+    .cursor-ring {
+      position: fixed;
+      width: 36px; height: 36px;
+      border: 1px solid var(--copper);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: transform 0.12s ease-out, width 0.3s, height 0.3s, opacity 0.3s;
+      opacity: 0.6;
+    }
+    body:hover .cursor { opacity: 1; }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.028;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    /* ══════════════════════════════
+       HERO
+    ══════════════════════════════ */
+    .hero {
+      min-height: 100svh;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      padding: 0;
+      background: var(--ink);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Animated gradient wash */
+    .hero-wash {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 100% 70% at 15% 80%, rgba(155,107,58,0.22) 0%, transparent 55%),
+        radial-gradient(ellipse 80% 60% at 85% 20%, rgba(96,112,96,0.18) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 50% at 50% 50%, rgba(20,18,14,0.5) 0%, transparent 80%);
+      animation: washMove 12s ease-in-out infinite alternate;
+    }
+    @keyframes washMove {
+      from { opacity: 1; transform: scale(1); }
+      to   { opacity: 0.8; transform: scale(1.06); }
+    }
+
+    /* Thin horizontal rule lines — editorial feel */
+    .hero-rules {
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(
+          180deg,
+          transparent 0px,
+          transparent 79px,
+          rgba(255,255,255,0.025) 79px,
+          rgba(255,255,255,0.025) 80px
+        );
+    }
+
+    /* Large background text */
+    .hero-bigtext {
+      position: absolute;
+      bottom: -0.15em;
+      left: -0.03em;
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(14rem, 38vw, 38rem);
+      font-weight: 700;
+      line-height: 0.8;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255,255,255,0.06);
+      pointer-events: none;
+      letter-spacing: -0.04em;
+      user-select: none;
+    }
+
+    .hero-main {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: clamp(3rem, 8vw, 7rem) clamp(2rem, 7vw, 8rem);
+      gap: 0;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Nunito Sans', sans-serif;
+      font-weight: 300;
+      font-size: clamp(0.6rem, 1.2vw, 0.75rem);
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--copper-pale);
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: heroIn 1s 0.2s cubic-bezier(0.16,1,0.3,1) both;
+    }
+
+    .hero-name {
+      font-family: 'Playfair Display', serif;
+      font-weight: 400;
+      color: var(--white);
+      line-height: 0.92;
+      letter-spacing: -0.02em;
+    }
+    .hero-name-v {
+      font-size: clamp(5rem, 18vw, 18rem);
+      opacity: 0;
+      animation: heroInLeft 1.1s 0.35s cubic-bezier(0.16,1,0.3,1) both;
+      display: block;
+    }
+    .hero-name-amp {
+      font-size: clamp(2rem, 7vw, 7rem);
+      font-style: italic;
+      color: var(--copper-pale);
+      display: block;
+      opacity: 0;
+      animation: heroIn 1s 0.55s cubic-bezier(0.16,1,0.3,1) both;
+      margin: 0.1em 0;
+    }
+    .hero-name-a {
+      font-size: clamp(5rem, 18vw, 18rem);
+      opacity: 0;
+      animation: heroInLeft 1.1s 0.65s cubic-bezier(0.16,1,0.3,1) both;
+      display: block;
+    }
+
+    .hero-meta {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: clamp(1.5rem, 3vw, 2.5rem) clamp(2rem, 7vw, 8rem);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      gap: 2rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: heroIn 1s 1s cubic-bezier(0.16,1,0.3,1) both;
+    }
+    .hero-meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .hero-meta-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--stone);
+    }
+    .hero-meta-value {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1rem, 2.5vw, 1.5rem);
+      font-style: italic;
+      color: var(--white);
+    }
+
+    .hero-scroll {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      color: var(--stone);
+    }
+    .hero-scroll-line {
+      width: 60px;
+      height: 1px;
+      background: var(--copper);
+      animation: scrollLine 2s 2s ease both, pulse 3s 4s ease-in-out infinite;
+    }
+    .hero-scroll-text {
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+    }
+    @keyframes scrollLine {
+      from { width: 0; opacity: 0; }
+      to   { width: 60px; opacity: 1; }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    @keyframes heroIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes heroInLeft {
+      from { opacity: 0; transform: translateX(-30px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    /* ══════════════════════════════
+       COUNTDOWN
+    ══════════════════════════════ */
+    .countdown-wrap {
+      background: var(--white);
+      padding: clamp(5rem, 10vw, 9rem) clamp(2rem, 7vw, 8rem);
+      position: relative;
+    }
+    .countdown-wrap::before {
+      content: '';
+      position: absolute;
+      top: 0; left: clamp(2rem, 7vw, 8rem); right: clamp(2rem, 7vw, 8rem);
+      height: 1px;
+      background: linear-gradient(90deg, var(--copper), var(--mist), transparent);
+    }
+
+    .section-eyebrow {
+      font-size: 0.62rem;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: var(--copper);
+      margin-bottom: 1rem;
+    }
+    .section-heading {
+      font-family: 'Playfair Display', serif;
+      font-weight: 400;
+      font-size: clamp(2rem, 5vw, 3.8rem);
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: clamp(3rem, 6vw, 5rem);
+    }
+    .section-heading em {
+      font-style: italic;
+      color: var(--mist-dark);
+    }
+
+    .countdown-grid {
+      display: flex;
+      gap: clamp(1rem, 3vw, 3rem);
+      flex-wrap: wrap;
+    }
+    .cd-block {
+      flex: 1;
+      min-width: 100px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .cd-block::before {
+      content: '';
+      display: block;
+      height: 2px;
+      background: var(--linen);
+      margin-bottom: 1rem;
+    }
+    .cd-num {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.5rem, 8vw, 7rem);
+      font-weight: 400;
+      line-height: 1;
+      color: var(--ink);
+      letter-spacing: -0.03em;
+    }
+    .cd-label {
+      font-size: 0.6rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--stone);
+    }
+
+    /* ══════════════════════════════
+       INFO GRID
+    ══════════════════════════════ */
+    .info-section {
+      background: var(--paper2);
+      padding: clamp(5rem, 10vw, 9rem) clamp(2rem, 7vw, 8rem);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1px;
+      background: var(--linen);
+      border: 1px solid var(--linen);
+      margin-top: 4rem;
+    }
+    .info-card {
+      background: var(--paper2);
+      padding: clamp(2rem, 4vw, 3.5rem);
+      position: relative;
+      transition: background 0.4s;
+    }
+    .info-card:hover { background: var(--white); }
+
+    .info-card-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 5rem;
+      font-weight: 700;
+      color: var(--linen);
+      line-height: 1;
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      letter-spacing: -0.04em;
+      transition: color 0.4s;
+    }
+    .info-card:hover .info-card-num { color: var(--paper2); }
+
+    .info-card-label {
+      font-size: 0.58rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--copper);
+      margin-bottom: 1.2rem;
+    }
+    .info-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.4rem, 3vw, 2rem);
+      font-weight: 400;
+      color: var(--ink);
+      line-height: 1.2;
+      margin-bottom: 0.8rem;
+    }
+    .info-card-text {
+      font-size: 0.8rem;
+      line-height: 1.8;
+      color: #6b6055;
+    }
+
+    /* ══════════════════════════════
+       FULL-BLEED QUOTE
+    ══════════════════════════════ */
+    .quote-section {
+      background: var(--ink);
+      padding: clamp(6rem, 14vw, 12rem) clamp(2rem, 7vw, 8rem);
+      position: relative;
+      overflow: hidden;
+    }
+    .quote-bg-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(8rem, 25vw, 24rem);
+      font-weight: 700;
+      font-style: italic;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255,255,255,0.04);
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
+    }
+    .quote-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 780px;
+    }
+    .quote-mark {
+      font-family: 'Playfair Display', serif;
+      font-size: 8rem;
+      color: var(--copper);
+      line-height: 0.6;
+      margin-bottom: 1.5rem;
+      opacity: 0.5;
+    }
+    .quote-text {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(1.5rem, 3.5vw, 2.6rem);
+      color: var(--white);
+      line-height: 1.5;
+      font-weight: 400;
+    }
+    .quote-attr {
+      margin-top: 3rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--mist);
+    }
+
+    /* ══════════════════════════════
+       LOCATION
+    ══════════════════════════════ */
+    .location-section {
+      background: var(--white);
+      padding: clamp(5rem, 10vw, 9rem) clamp(2rem, 7vw, 8rem);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(3rem, 6vw, 6rem);
+      align-items: start;
+    }
+    @media (max-width: 760px) {
+      .location-section { grid-template-columns: 1fr; }
+    }
+
+    .location-address {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 400;
+      font-style: italic;
+      line-height: 1.3;
+      color: var(--ink);
+      margin-top: 2rem;
+      margin-bottom: 1.5rem;
+    }
+    .location-desc {
+      font-size: 0.82rem;
+      line-height: 1.9;
+      color: #6b6055;
+      margin-bottom: 2.5rem;
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.8rem;
+      padding: 1rem 2.2rem;
+      background: var(--ink);
+      color: var(--white);
+      font-family: 'Nunito Sans', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: none;
+      cursor: none;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .btn-primary:hover {
+      background: var(--copper);
+      transform: translateY(-2px);
+    }
+    .btn-primary svg {
+      width: 14px; height: 14px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .location-right {
+      padding-top: clamp(3rem, 6vw, 7.5rem);
+    }
+    .location-details-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .location-detail-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid var(--linen);
+    }
+    .location-detail-item:first-child { border-top: 1px solid var(--linen); }
+    .location-detail-key {
+      font-size: 0.58rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--copper);
+    }
+    .location-detail-val {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: var(--ink);
+    }
+    .location-detail-sub {
+      font-size: 0.75rem;
+      color: var(--stone);
+    }
+
+    /* ══════════════════════════════
+       RSVP FORM
+    ══════════════════════════════ */
+    .rsvp-section {
+      background: var(--paper2);
+      padding: clamp(5rem, 10vw, 9rem) clamp(2rem, 7vw, 8rem);
+    }
+
+    .rsvp-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: clamp(3rem, 6vw, 8rem);
+      align-items: start;
+      max-width: 1100px;
+    }
+    @media (max-width: 780px) {
+      .rsvp-layout { grid-template-columns: 1fr; }
+    }
+
+    .rsvp-intro-text {
+      font-size: 0.82rem;
+      line-height: 1.9;
+      color: #6b6055;
+      margin-top: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .rsvp-deadline {
+      display: inline-block;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.1rem;
+      color: var(--copper);
+    }
+    .tg-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-top: 2rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid var(--linen);
+      padding-bottom: 0.3rem;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .tg-link:hover { color: var(--copper); border-color: var(--copper); }
+
+    /* Form */
+    .rsvp-form {
+      background: var(--white);
+      padding: clamp(2rem, 4vw, 3.5rem);
+      border-top: 3px solid var(--copper);
+    }
+    .form-heading {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: var(--ink);
+      margin-bottom: 2rem;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .field label {
+      font-size: 0.6rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--copper);
+    }
+    .field input,
+    .field select,
+    .field textarea {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--linen);
+      padding: 0.7rem 0;
+      font-family: 'Nunito Sans', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 300;
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.25s;
+      -webkit-appearance: none;
+      cursor: none;
+    }
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: var(--copper);
+    }
+    .field select {
+      background: transparent;
+      border-radius: 0;
+    }
+    .field textarea {
+      resize: none;
+      height: 80px;
+    }
+
+    /* Radio group */
+    .radio-group {
+      display: flex;
+      gap: 0;
+      margin-top: 0.3rem;
+    }
+    .radio-opt {
+      flex: 1;
+      position: relative;
+    }
+    .radio-opt input {
+      position: absolute;
+      opacity: 0;
+      width: 0; height: 0;
+    }
+    .radio-opt label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem;
+      border: 1px solid var(--linen);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--stone);
+      cursor: none;
+      transition: all 0.2s;
+    }
+    .radio-opt input:checked + label {
+      background: var(--ink);
+      color: var(--white);
+      border-color: var(--ink);
+    }
+    .radio-opt label:hover { border-color: var(--copper); color: var(--copper); }
+
+    .btn-submit {
+      width: 100%;
+      padding: 1.1rem;
+      background: var(--ink);
+      color: var(--white);
+      font-family: 'Nunito Sans', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      border: none;
+      cursor: none;
+      margin-top: 2rem;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .btn-submit:hover {
+      background: var(--copper);
+      transform: translateY(-2px);
+    }
+    .btn-submit:active { transform: translateY(0); }
+
+    /* Success state */
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 3rem 1rem;
+    }
+    .form-success.visible { display: block; }
+    .form-success-icon {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      color: var(--copper);
+      margin-bottom: 1rem;
+    }
+    .form-success-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-style: italic;
+      color: var(--ink);
+      margin-bottom: 0.8rem;
+    }
+    .form-success-text {
+      font-size: 0.8rem;
+      color: var(--stone);
+      line-height: 1.7;
+    }
+
+    /* ══════════════════════════════
+       FOOTER
+    ══════════════════════════════ */
+    footer {
+      background: var(--ink);
+      padding: clamp(3rem, 6vw, 5rem) clamp(2rem, 7vw, 8rem);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+    .footer-names {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      color: var(--white);
+    }
+    .footer-names span { color: var(--copper-pale); }
+    .footer-right {
+      text-align: right;
+    }
+    .footer-date {
+      font-size: 0.62rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--stone);
+    }
+    .footer-place {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 0.95rem;
+      color: var(--mist);
+      margin-top: 0.3rem;
+    }
+
+    /* ══════════════════════════════
+       REVEAL
+    ══════════════════════════════ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    @media (max-width: 480px) {
+      .hero-name-v, .hero-name-a { font-size: clamp(3.8rem, 22vw, 5rem); }
+      .hero-name-amp { font-size: clamp(1.6rem, 8vw, 2.5rem); }
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 600px) {
+      /* Hide custom cursor on touch devices */
+      .cursor, .cursor-ring { display: none; }
+      body { cursor: auto; }
+      a, button, input, select, textarea { cursor: auto; }
+
+      .hero-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1.2rem;
+      }
+      .hero-scroll { margin-top: 0.5rem; }
+
+      .countdown-grid { gap: 0.8rem; }
+      .cd-num { font-size: clamp(2.8rem, 16vw, 4rem); }
+
+      .info-grid { gap: 2px; }
+      .info-card-num { font-size: 3rem; top: 1rem; right: 1rem; }
+
+      .rsvp-layout { grid-template-columns: 1fr; gap: 2.5rem; }
+      .rsvp-form { padding: 2rem 1.5rem; }
+
+      .radio-group { flex-direction: row; }
+      .radio-opt label { padding: 0.65rem 0.5rem; font-size: 0.65rem; }
+
+      .location-section { padding-bottom: 4rem; }
+
+      footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+      .footer-right { text-align: left; }
+
+      .quote-mark { font-size: 5rem; }
+    }
+
+    @media (max-width: 400px) {
+      .hero-meta-value { font-size: 0.95rem; }
+      .section-heading { font-size: 1.8rem; }
+      .cd-num { font-size: 2.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- ══ HERO ══ -->
+  <section class="hero">
+    <div class="hero-wash"></div>
+    <div class="hero-rules"></div>
+    <div class="hero-bigtext" aria-hidden="true">2026</div>
+
+    <div class="hero-main">
+      <p class="hero-eyebrow">Приглашение на свадьбу</p>
+      <h1 class="hero-name" aria-label="Валера и Алина">
+        <span class="hero-name-v">Валера</span>
+        <span class="hero-name-amp">&amp;</span>
+        <span class="hero-name-a">Алина</span>
+      </h1>
+    </div>
+
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Дата</span>
+        <span class="hero-meta-value">27 августа 2026</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Место</span>
+        <span class="hero-meta-value">Финские дачи, Соузга</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="hero-meta-label">Начало</span>
+        <span class="hero-meta-value">13:00</span>
+      </div>
+      <div class="hero-scroll">
+        <div class="hero-scroll-line"></div>
+        <span class="hero-scroll-text">листать</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ COUNTDOWN ══ -->
+  <section class="countdown-wrap">
+    <p class="section-eyebrow reveal">До события</p>
+    <h2 class="section-heading reveal reveal-delay-1">До нашего дня<br><em>осталось</em></h2>
+    <div class="countdown-grid">
+      <div class="cd-block reveal reveal-delay-1">
+        <div class="cd-num" id="cd-days">—</div>
+        <div class="cd-label">дней</div>
+      </div>
+      <div class="cd-block reveal reveal-delay-2">
+        <div class="cd-num" id="cd-hours">—</div>
+        <div class="cd-label">часов</div>
+      </div>
+      <div class="cd-block reveal reveal-delay-3">
+        <div class="cd-num" id="cd-min">—</div>
+        <div class="cd-label">минут</div>
+      </div>
+      <div class="cd-block reveal reveal-delay-4">
+        <div class="cd-num" id="cd-sec">—</div>
+        <div class="cd-label">секунд</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ INFO ══ -->
+  <section class="info-section">
+    <p class="section-eyebrow reveal">Детали</p>
+    <h2 class="section-heading reveal reveal-delay-1">Всё, что нужно<br><em>знать</em></h2>
+    <div class="info-grid">
+      <div class="info-card reveal">
+        <span class="info-card-num" aria-hidden="true">01</span>
+        <p class="info-card-label">Дата</p>
+        <h3 class="info-card-title">27 августа 2026</h3>
+        <p class="info-card-text">Четверг. Конец лета, горный воздух и незабываемый закат над Алтаем.</p>
+      </div>
+      <div class="info-card reveal reveal-delay-1">
+        <span class="info-card-num" aria-hidden="true">02</span>
+        <p class="info-card-label">Сбор гостей</p>
+        <h3 class="info-card-title">13:00</h3>
+        <p class="info-card-text">Приезжайте чуть раньше — найдём место, познакомимся, начнём вместе.</p>
+      </div>
+      <div class="info-card reveal reveal-delay-2">
+        <span class="info-card-num" aria-hidden="true">03</span>
+        <p class="info-card-label">Место</p>
+        <h3 class="info-card-title">Турбаза<br>«Финские дачи»</h3>
+        <p class="info-card-text">Соузга, Республика Алтай. Среди гор, леса и живой воды.</p>
+      </div>
+      <div class="info-card reveal reveal-delay-3">
+        <span class="info-card-num" aria-hidden="true">04</span>
+        <p class="info-card-label">Дресс-код</p>
+        <h3 class="info-card-title">Природные тона</h3>
+        <p class="info-card-text">Бежевый, терракота, хаки, белый. Удобная обувь приветствуется — мы в горах.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ QUOTE ══ -->
+  <section class="quote-section">
+    <div class="quote-bg-text" aria-hidden="true">любовь</div>
+    <div class="quote-inner reveal">
+      <div class="quote-mark" aria-hidden="true">"</div>
+      <p class="quote-text">
+        Среди алтайских гор, под открытым небом — два сердца, одна история. Мы хотим разделить этот момент именно с вами.
+      </p>
+      <p class="quote-attr">Валера &amp; Алина · 27.08.2026</p>
+    </div>
+  </section>
+
+  <!-- ══ LOCATION ══ -->
+  <section class="location-section">
+    <div>
+      <p class="section-eyebrow reveal">Как добраться</p>
+      <p class="location-address reveal reveal-delay-1">Турбаза<br>«Финские дачи»,<br>Соузга</p>
+      <p class="location-desc reveal reveal-delay-2">
+        Республика Алтай, Майминский район, село Соузга.<br>
+        Турбаза расположена в живописном месте в хвойном лесу,<br>
+        в нескольких минутах от слияния рек Катунь и Майма.
+      </p>
+      <a class="btn-primary reveal reveal-delay-3" href="https://yandex.ru/maps/?text=Турбаза+Финские+дачи+Соузга+Алтай" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" fill="currentColor" stroke="none"/></svg>
+        Открыть карту
+      </a>
+    </div>
+    <div class="location-right reveal">
+      <ul class="location-details-list">
+        <li class="location-detail-item">
+          <span class="location-detail-key">Адрес</span>
+          <span class="location-detail-val">с. Соузга, ул. Лесная</span>
+          <span class="location-detail-sub">Майминский район, Республика Алтай</span>
+        </li>
+        <li class="location-detail-item">
+          <span class="location-detail-key">Ориентир</span>
+          <span class="location-detail-val">Поворот с Чуйского тракта</span>
+          <span class="location-detail-sub">Указатель «Соузга» — въезд в лес</span>
+        </li>
+        <li class="location-detail-item">
+          <span class="location-detail-key">Парковка</span>
+          <span class="location-detail-val">Есть на территории</span>
+          <span class="location-detail-sub">Бесплатно для гостей</span>
+        </li>
+        <li class="location-detail-item">
+          <span class="location-detail-key">Трансфер</span>
+          <span class="location-detail-val">Уточните заранее</span>
+          <span class="location-detail-sub">Напишите нам, организуем</span>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ══ RSVP ══ -->
+  <section class="rsvp-section" id="rsvp">
+    <div class="rsvp-layout">
+      <div>
+        <p class="section-eyebrow reveal">Подтверждение</p>
+        <h2 class="section-heading reveal reveal-delay-1">Вы будете<br><em>с нами?</em></h2>
+        <p class="rsvp-intro-text reveal reveal-delay-2">
+          Пожалуйста, подтвердите своё присутствие до<br>
+          <span class="rsvp-deadline">1 августа 2026 года.</span><br><br>
+          Заполните форму — нам важно знать, сколько вас будет. Это поможет подготовиться и сделать праздник идеальным для каждого.
+        </p>
+        <a class="tg-link reveal reveal-delay-3" href="https://t.me/valroi123" target="_blank" rel="noopener">
+          Telegram @valroi123
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M7 17L17 7M17 7H7M17 7v10"/>
+          </svg>
+        </a>
+      </div>
+
+      <div class="rsvp-form reveal reveal-delay-1">
+        <div id="formBody">
+          <p class="form-heading">Заполнить форму</p>
+          <div class="field-group">
+            <div class="field">
+              <label for="name">Ваше имя</label>
+              <input type="text" id="name" placeholder="Иван Петров" autocomplete="name" />
+            </div>
+            <div class="field">
+              <label>Придёте?</label>
+              <div class="radio-group">
+                <div class="radio-opt">
+                  <input type="radio" name="attend" id="yes" value="yes" checked />
+                  <label for="yes">Буду</label>
+                </div>
+                <div class="radio-opt">
+                  <input type="radio" name="attend" id="no" value="no" />
+                  <label for="no">Не смогу</label>
+                </div>
+              </div>
+            </div>
+            <div class="field" id="guestCountField">
+              <label for="guests">Количество человек (включая вас)</label>
+              <select id="guests">
+                <option value="1">1 — только я</option>
+                <option value="2">2 — я + 1</option>
+                <option value="3">3 человека</option>
+                <option value="4">4 человека</option>
+                <option value="5+">5 и больше</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="dietary">Пожелания к меню или особенности</label>
+              <textarea id="dietary" placeholder="Вегетарианское, аллергии, пожелания…"></textarea>
+            </div>
+            <div class="field">
+              <label for="wishes">Пожелание молодым (по желанию)</label>
+              <textarea id="wishes" placeholder="Тёплые слова…"></textarea>
+            </div>
+          </div>
+          <button class="btn-submit" id="submitBtn">Отправить подтверждение</button>
+        </div>
+        <div class="form-success" id="formSuccess">
+          <div class="form-success-icon">V&A</div>
+          <p class="form-success-title">Получено, спасибо!</p>
+          <p class="form-success-text">
+            Мы рады, что вы будете с нами.<br>
+            Ждём вас 27 августа в Соузге.<br><br>
+            Все детали уточним ближе к дате.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ FOOTER ══ -->
+  <footer>
+    <p class="footer-names">Валера <span>&amp;</span> Алина</p>
+    <div class="footer-right">
+      <p class="footer-date">27 · 08 · 2026</p>
+      <p class="footer-place">Горный Алтай · Соузга</p>
+    </div>
+  </footer>
+
+  <script>
+    // ── Custom cursor ──
+    const cursor = document.getElementById('cursor');
+    const ring   = document.getElementById('cursorRing');
+    let mx = -100, my = -100, rx = -100, ry = -100;
+    document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    function animateCursor() {
+      cursor.style.left = mx + 'px';
+      cursor.style.top  = my + 'px';
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px';
+      ring.style.top  = ry + 'px';
+      requestAnimationFrame(animateCursor);
+    }
+    animateCursor();
+    document.querySelectorAll('a, button, input, select, textarea, label').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.style.width = '14px'; cursor.style.height = '14px';
+        ring.style.width = '50px'; ring.style.height = '50px';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.style.width = '8px'; cursor.style.height = '8px';
+        ring.style.width = '36px'; ring.style.height = '36px';
+      });
+    });
+
+    // ── Countdown ──
+    function updateCD() {
+      const target = new Date('2026-08-27T13:00:00+07:00');
+      const diff = target - new Date();
+      if (diff <= 0) {
+        ['cd-days','cd-hours','cd-min','cd-sec'].forEach(id => document.getElementById(id).textContent = '0');
+        return;
+      }
+      document.getElementById('cd-days').textContent  = Math.floor(diff / 86400000);
+      document.getElementById('cd-hours').textContent = String(Math.floor((diff % 86400000) / 3600000)).padStart(2,'0');
+      document.getElementById('cd-min').textContent   = String(Math.floor((diff % 3600000) / 60000)).padStart(2,'0');
+      document.getElementById('cd-sec').textContent   = String(Math.floor((diff % 60000) / 1000)).padStart(2,'0');
+    }
+    updateCD(); setInterval(updateCD, 1000);
+
+    // ── Scroll reveal ──
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+    // ── RSVP attend toggle ──
+    const yesRadio = document.getElementById('yes');
+    const noRadio  = document.getElementById('no');
+    const guestField = document.getElementById('guestCountField');
+    function toggleGuests() {
+      guestField.style.display = noRadio.checked ? 'none' : 'flex';
+    }
+    yesRadio.addEventListener('change', toggleGuests);
+    noRadio.addEventListener('change', toggleGuests);
+
+    // ── Form submit (localStorage) ──
+    document.getElementById('submitBtn').addEventListener('click', () => {
+      const name    = document.getElementById('name').value.trim();
+      const attend  = document.querySelector('input[name="attend"]:checked').value;
+      const guests  = attend === 'yes' ? document.getElementById('guests').value : '0';
+      const dietary = document.getElementById('dietary').value.trim();
+      const wishes  = document.getElementById('wishes').value.trim();
+
+      if (!name) { document.getElementById('name').focus(); return; }
+
+      // Save to localStorage as a simple log
+      const entry = { name, attend, guests, dietary, wishes, ts: new Date().toISOString() };
+      const all = JSON.parse(localStorage.getItem('rsvp_entries') || '[]');
+      all.push(entry);
+      localStorage.setItem('rsvp_entries', JSON.stringify(all));
+
+      // Show success
+      document.getElementById('formBody').style.display  = 'none';
+      const success = document.getElementById('formSuccess');
+      if (attend === 'no') {
+        success.querySelector('.form-success-title').textContent = 'Жаль, что не получится';
+        success.querySelector('.form-success-text').textContent  = 'Спасибо, что написали. Мы будем помнить вас в этот день.';
+      }
+      success.classList.add('visible');
+    });
+  </script>
+</body>
+</html>
