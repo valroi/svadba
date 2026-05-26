@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Nunito+Sans:wght@200;300;400&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --ink: #0e0d0b;
+      --ink: #0f1813;
       --paper: #f7f4ee;
       --paper2: #f0ece3;
       --linen: #e8e2d6;
@@ -69,6 +69,164 @@
     }
 
     /* ══════════════════════════════
+       ENVELOPE OVERLAY
+    ══════════════════════════════ */
+    #envelope-overlay {
+      position: fixed;
+      inset: 0;
+      background: #f2ede4;
+      z-index: 20000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 1s ease;
+    }
+    #envelope-overlay.hide {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .envelope-scene {
+      perspective: 1200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .envelope {
+      position: relative;
+      width: min(380px, 88vw);
+      height: min(260px, 60vw);
+      animation: envAppear 0.7s cubic-bezier(0.16,1,0.3,1) both;
+    }
+
+    @keyframes envAppear {
+      from { opacity: 0; transform: scale(0.88) translateY(20px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* Envelope body */
+    .env-body {
+      position: absolute;
+      inset: 0;
+      background: #ede7dd;
+      border: 1px solid #c9bfab;
+      box-shadow: 0 24px 80px rgba(15,24,19,0.18), 0 4px 12px rgba(15,24,19,0.1);
+    }
+
+    /* Bottom fold lines decorative */
+    .env-body::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to top right, transparent 49.4%, #d8d0c2 49.4%, #d8d0c2 50.6%, transparent 50.6%),
+        linear-gradient(to top left,  transparent 49.4%, #d8d0c2 49.4%, #d8d0c2 50.6%, transparent 50.6%);
+      pointer-events: none;
+    }
+
+    /* Card inside the envelope */
+    .env-card {
+      position: absolute;
+      left: 18px; right: 18px;
+      bottom: 14px;
+      height: calc(100% - 28px);
+      background: var(--white);
+      border: 1px solid #ddd6c6;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      overflow: hidden;
+      z-index: 1;
+      transform: translateY(8px);
+      transition: transform 1s 1.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .env-card.rise {
+      transform: translateY(-55px);
+    }
+    .env-card-eyebrow {
+      font-size: 0.52rem;
+      letter-spacing: 0.42em;
+      text-transform: uppercase;
+      color: var(--copper);
+      font-family: 'Nunito Sans', sans-serif;
+      font-weight: 300;
+    }
+    .env-card-names {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.4rem, 5vw, 2rem);
+      font-weight: 400;
+      color: var(--ink);
+      text-align: center;
+      line-height: 1.1;
+    }
+    .env-card-names em {
+      font-style: italic;
+      color: var(--copper-pale);
+      font-size: 0.75em;
+      display: block;
+    }
+    .env-card-date {
+      font-size: 0.6rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--stone);
+      margin-top: 4px;
+    }
+    /* Thin copper line on card */
+    .env-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 20px; right: 20px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--copper), transparent);
+    }
+
+    /* Envelope flap — triangle that folds open */
+    .env-flap {
+      position: absolute;
+      top: -1px; left: -1px; right: -1px;
+      height: 52%;
+      background: #e4ddd2;
+      border: 1px solid #c9bfab;
+      clip-path: polygon(0 0, 50% 100%, 100% 0);
+      transform-origin: top center;
+      transform: rotateX(0deg);
+      transform-style: preserve-3d;
+      z-index: 3;
+      transition: transform 1s 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .env-flap.open {
+      transform: rotateX(-180deg);
+    }
+
+    /* Envelope seal wax dot */
+    .env-seal {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 28px; height: 28px;
+      background: var(--copper);
+      border-radius: 50%;
+      z-index: 4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 0.6rem;
+      color: var(--white);
+      font-style: italic;
+      box-shadow: 0 2px 8px rgba(181,118,58,0.4);
+      transition: opacity 0.3s 0.4s ease;
+    }
+    .env-seal.hide {
+      opacity: 0;
+    }
+
+    /* ══════════════════════════════
        HERO
     ══════════════════════════════ */
     .hero {
@@ -81,7 +239,6 @@
       overflow: hidden;
     }
 
-    /* Animated gradient wash */
     .hero-wash {
       position: absolute;
       inset: 0;
@@ -96,7 +253,6 @@
       to   { opacity: 0.8; transform: scale(1.06); }
     }
 
-    /* Thin horizontal rule lines — editorial feel */
     .hero-rules {
       position: absolute;
       inset: 0;
@@ -110,7 +266,6 @@
         );
     }
 
-    /* Large background text */
     .hero-bigtext {
       position: absolute;
       bottom: -0.15em;
@@ -517,6 +672,105 @@
     }
 
     /* ══════════════════════════════
+       TIMELINE
+    ══════════════════════════════ */
+    .timeline-section {
+      background: var(--ink);
+      padding: clamp(5rem, 10vw, 9rem) clamp(2rem, 7vw, 8rem);
+      position: relative;
+      overflow: hidden;
+    }
+    .timeline-section .section-eyebrow { color: var(--copper-pale); }
+    .timeline-section .section-heading { color: var(--white); }
+    .timeline-section .section-heading em { color: var(--mist); }
+
+    /* subtle background text */
+    .timeline-bg {
+      position: absolute;
+      bottom: -0.1em;
+      right: -0.02em;
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(10rem, 28vw, 26rem);
+      font-weight: 700;
+      font-style: italic;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(255,255,255,0.04);
+      pointer-events: none;
+      user-select: none;
+      line-height: 1;
+    }
+
+    .timeline {
+      position: relative;
+      max-width: 760px;
+    }
+
+    /* Vertical line */
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 80px;
+      top: 0; bottom: 0;
+      width: 1px;
+      background: linear-gradient(180deg, var(--copper) 0%, rgba(181,118,58,0.2) 100%);
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: 0;
+      padding: clamp(1.4rem, 3vw, 2rem) 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      position: relative;
+    }
+    .timeline-item:last-child { border-bottom: none; }
+
+    .timeline-time {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      font-style: italic;
+      color: var(--copper-pale);
+      padding-top: 0.15em;
+      padding-right: 1rem;
+    }
+
+    .timeline-content {
+      padding-left: clamp(1.4rem, 3vw, 2.2rem);
+      border-left: 1px solid transparent; /* aligned with ::before line */
+      position: relative;
+    }
+    /* dot on the line */
+    .timeline-content::before {
+      content: '';
+      position: absolute;
+      left: -4px;
+      top: 0.55em;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--copper);
+      box-shadow: 0 0 0 3px rgba(181,118,58,0.25);
+    }
+
+    .timeline-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+      font-weight: 400;
+      color: var(--white);
+      margin-bottom: 0.3rem;
+    }
+    .timeline-desc {
+      font-size: 0.78rem;
+      line-height: 1.7;
+      color: var(--stone);
+    }
+
+    @media (max-width: 520px) {
+      .timeline::before { left: 60px; }
+      .timeline-item { grid-template-columns: 60px 1fr; }
+      .timeline-time { font-size: 0.9rem; }
+    }
+
+    /* ══════════════════════════════
        RSVP FORM
     ══════════════════════════════ */
     .rsvp-section {
@@ -524,48 +778,36 @@
       padding: clamp(5rem, 10vw, 9rem) clamp(2rem, 7vw, 8rem);
     }
 
-    .rsvp-layout {
-      display: grid;
-      grid-template-columns: 1fr 1.4fr;
-      gap: clamp(3rem, 6vw, 8rem);
-      align-items: start;
-      max-width: 1100px;
+    /* Centered heading */
+    .rsvp-header {
+      text-align: center;
+      margin-bottom: clamp(3rem, 6vw, 5rem);
     }
-    @media (max-width: 780px) {
-      .rsvp-layout { grid-template-columns: 1fr; }
+    .rsvp-header .section-eyebrow { display: block; }
+    .rsvp-header .section-heading {
+      font-size: clamp(2.6rem, 7vw, 5rem);
+      margin-bottom: 0;
     }
-
+    .rsvp-header .section-heading em { color: var(--copper); }
     .rsvp-intro-text {
       font-size: 0.82rem;
       line-height: 1.9;
       color: #6b6055;
-      margin-top: 1.5rem;
-      margin-bottom: 2rem;
+      margin-top: 1.2rem;
     }
     .rsvp-deadline {
-      display: inline-block;
+      display: inline;
       font-family: 'Playfair Display', serif;
       font-style: italic;
       font-size: 1.1rem;
       color: var(--copper);
     }
-    .tg-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
-      margin-top: 2rem;
-      font-size: 0.65rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--ink);
-      text-decoration: none;
-      border-bottom: 1px solid var(--linen);
-      padding-bottom: 0.3rem;
-      transition: color 0.2s, border-color 0.2s;
-    }
-    .tg-link:hover { color: var(--copper); border-color: var(--copper); }
 
-    /* Form */
+    /* Form card */
+    .rsvp-form-wrap {
+      max-width: 600px;
+      margin: 0 auto;
+    }
     .rsvp-form {
       background: var(--white);
       padding: clamp(2rem, 4vw, 3.5rem);
@@ -661,6 +903,55 @@
     }
     .radio-opt label:hover { border-color: var(--copper); color: var(--copper); }
 
+    /* Checkbox group for alcohol */
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+    .check-opt {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: none;
+    }
+    .check-opt input[type="checkbox"] {
+      width: 16px; height: 16px;
+      border: 1px solid var(--linen);
+      border-radius: 2px;
+      appearance: none;
+      -webkit-appearance: none;
+      cursor: none;
+      flex-shrink: 0;
+      position: relative;
+      background: transparent;
+      transition: border-color 0.2s, background 0.2s;
+      border-bottom: 1px solid var(--linen) !important;
+      padding: 0 !important;
+    }
+    .check-opt input[type="checkbox"]:checked {
+      background: var(--ink);
+      border-color: var(--ink) !important;
+    }
+    .check-opt input[type="checkbox"]:checked::after {
+      content: '';
+      position: absolute;
+      left: 3px; top: 1px;
+      width: 4px; height: 8px;
+      border-right: 2px solid var(--white);
+      border-bottom: 2px solid var(--white);
+      transform: rotate(45deg);
+    }
+    .check-opt label {
+      font-size: 0.82rem;
+      font-weight: 300;
+      color: var(--ink);
+      letter-spacing: 0.05em;
+      text-transform: none;
+      cursor: none;
+    }
+
     .btn-submit {
       width: 100%;
       padding: 1.1rem;
@@ -707,6 +998,23 @@
       line-height: 1.7;
     }
 
+    /* Telegram link */
+    .tg-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-top: 1.5rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--ink);
+      text-decoration: none;
+      border-bottom: 1px solid var(--linen);
+      padding-bottom: 0.3rem;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .tg-link:hover { color: var(--copper); border-color: var(--copper); }
+
     /* ══════════════════════════════
        FOOTER
     ══════════════════════════════ */
@@ -726,9 +1034,7 @@
       color: var(--white);
     }
     .footer-names span { color: var(--copper-pale); }
-    .footer-right {
-      text-align: right;
-    }
+    .footer-right { text-align: right; }
     .footer-date {
       font-size: 0.62rem;
       letter-spacing: 0.4em;
@@ -760,14 +1066,13 @@
     .reveal-delay-3 { transition-delay: 0.3s; }
     .reveal-delay-4 { transition-delay: 0.4s; }
 
+    /* ── MOBILE ── */
     @media (max-width: 480px) {
       .hero-name-v, .hero-name-a { font-size: clamp(3.8rem, 22vw, 5rem); }
       .hero-name-amp { font-size: clamp(1.6rem, 8vw, 2.5rem); }
     }
 
-    /* ── MOBILE ── */
     @media (max-width: 600px) {
-      /* Hide custom cursor on touch devices */
       .cursor, .cursor-ring { display: none; }
       body { cursor: auto; }
       a, button, input, select, textarea { cursor: auto; }
@@ -785,7 +1090,6 @@
       .info-grid { gap: 2px; }
       .info-card-num { font-size: 3rem; top: 1rem; right: 1rem; }
 
-      .rsvp-layout { grid-template-columns: 1fr; gap: 2.5rem; }
       .rsvp-form { padding: 2rem 1.5rem; }
 
       .radio-group { flex-direction: row; }
@@ -811,6 +1115,25 @@
   </style>
 </head>
 <body>
+
+  <!-- ══ ENVELOPE ANIMATION ══ -->
+  <div id="envelope-overlay">
+    <div class="envelope-scene">
+      <div class="envelope">
+        <div class="env-body"></div>
+        <div class="env-card" id="envCard">
+          <p class="env-card-eyebrow">Приглашение на свадьбу</p>
+          <h2 class="env-card-names">
+            Валера
+            <em>&amp; Алина</em>
+          </h2>
+          <p class="env-card-date">27 · VIII · 2026</p>
+        </div>
+        <div class="env-seal" id="envSeal">V&A</div>
+        <div class="env-flap" id="envFlap"></div>
+      </div>
+    </div>
+  </div>
 
   <div class="cursor" id="cursor"></div>
   <div class="cursor-ring" id="cursorRing"></div>
@@ -840,8 +1163,12 @@
         <span class="hero-meta-value">Финские дачи, Соузга</span>
       </div>
       <div class="hero-meta-item">
+        <span class="hero-meta-label">Сбор гостей</span>
+        <span class="hero-meta-value">16:30</span>
+      </div>
+      <div class="hero-meta-item">
         <span class="hero-meta-label">Начало</span>
-        <span class="hero-meta-value">13:00</span>
+        <span class="hero-meta-value">17:00</span>
       </div>
       <div class="hero-scroll">
         <div class="hero-scroll-line"></div>
@@ -888,8 +1215,8 @@
       <div class="info-card reveal reveal-delay-1">
         <span class="info-card-num" aria-hidden="true">02</span>
         <p class="info-card-label">Сбор гостей</p>
-        <h3 class="info-card-title">13:00</h3>
-        <p class="info-card-text">Приезжайте чуть раньше — найдём место, познакомимся, начнём вместе.</p>
+        <h3 class="info-card-title">16:30</h3>
+        <p class="info-card-text">Приезжайте чуть раньше — начнём знакомиться, игристое и welcome-зона уже ждут вас.</p>
       </div>
       <div class="info-card reveal reveal-delay-2">
         <span class="info-card-num" aria-hidden="true">03</span>
@@ -901,7 +1228,7 @@
         <span class="info-card-num" aria-hidden="true">04</span>
         <p class="info-card-label">Дресс-код</p>
         <h3 class="info-card-title">Природные тона</h3>
-        <p class="info-card-text">Бежевый, терракота, хаки, белый. Удобная обувь приветствуется — мы в горах.</p>
+        <p class="info-card-text">Бежевый, терракота, хаки, коричневый, белый. Мы в горах — будьте в своей стихии.</p>
       </div>
     </div>
   </section>
@@ -959,33 +1286,90 @@
     </div>
   </section>
 
+  <!-- ══ TIMELINE ══ -->
+  <section class="timeline-section">
+    <div class="timeline-bg" aria-hidden="true">день</div>
+    <p class="section-eyebrow reveal">Программа</p>
+    <h2 class="section-heading reveal reveal-delay-1">Наш <em>день</em></h2>
+    <div class="timeline">
+      <div class="timeline-item reveal reveal-delay-1">
+        <div class="timeline-time">16:30</div>
+        <div class="timeline-content">
+          <h3 class="timeline-title">Сбор гостей</h3>
+          <p class="timeline-desc">Welcome-зона, игристое, знакомства — время пролетит незаметно.</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal reveal-delay-2">
+        <div class="timeline-time">17:00</div>
+        <div class="timeline-content">
+          <h3 class="timeline-title">Церемония</h3>
+          <p class="timeline-desc">Торжественный момент, ради которого мы здесь.</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal reveal-delay-3">
+        <div class="timeline-time">18:00</div>
+        <div class="timeline-content">
+          <h3 class="timeline-title">Свадебный ужин</h3>
+          <p class="timeline-desc">Вкусная еда, тёплые тосты, музыка и танцы.</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal reveal-delay-4">
+        <div class="timeline-time">21:00</div>
+        <div class="timeline-content">
+          <h3 class="timeline-title">Торт</h3>
+          <p class="timeline-desc">Сладкая традиция, которую мы не могли пропустить.</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-time">22:00</div>
+        <div class="timeline-content">
+          <h3 class="timeline-title">Танцевальный блок</h3>
+          <p class="timeline-desc">Диджей и танцпол — до самого конца.</p>
+        </div>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-time">23:00</div>
+        <div class="timeline-content">
+          <h3 class="timeline-title">Финал</h3>
+          <p class="timeline-desc">Надеемся, этот вечер останется в вашей памяти надолго.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ══ RSVP ══ -->
   <section class="rsvp-section" id="rsvp">
-    <div class="rsvp-layout">
-      <div>
-        <p class="section-eyebrow reveal">Подтверждение</p>
-        <h2 class="section-heading reveal reveal-delay-1">Вы будете<br><em>с нами?</em></h2>
-        <p class="rsvp-intro-text reveal reveal-delay-2">
-          Пожалуйста, подтвердите своё присутствие до<br>
-          <span class="rsvp-deadline">1 августа 2026 года.</span><br><br>
-          Заполните форму — нам важно знать, сколько вас будет. Это поможет подготовиться и сделать праздник идеальным для каждого.
-        </p>
-        <a class="tg-link reveal reveal-delay-3" href="https://t.me/valroi123" target="_blank" rel="noopener">
-          Telegram @valroi123
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M7 17L17 7M17 7H7M17 7v10"/>
-          </svg>
-        </a>
-      </div>
+    <div class="rsvp-header reveal">
+      <p class="section-eyebrow">Подтверждение</p>
+      <h2 class="section-heading">Вы будете<br><em>с нами?</em></h2>
+      <p class="rsvp-intro-text">
+        Пожалуйста, подтвердите своё присутствие до
+        <span class="rsvp-deadline">1 августа 2026 года.</span>
+      </p>
+      <a class="tg-link" href="https://t.me/valroi123" target="_blank" rel="noopener">
+        Telegram @valroi123
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M7 17L17 7M17 7H7M17 7v10"/>
+        </svg>
+      </a>
+    </div>
 
+    <div class="rsvp-form-wrap">
       <div class="rsvp-form reveal reveal-delay-1">
         <div id="formBody">
           <p class="form-heading">Заполнить форму</p>
           <div class="field-group">
+
             <div class="field">
-              <label for="name">Ваше имя</label>
-              <input type="text" id="name" placeholder="Иван Петров" autocomplete="name" />
+              <label for="name">Представьтесь</label>
+              <input type="text" id="name" placeholder="Имя и фамилия" autocomplete="name" />
             </div>
+
+            <div class="field" id="companionField">
+              <label for="companion">С кем планируете быть?</label>
+              <input type="text" id="companion" placeholder="Напишите по именам…" />
+            </div>
+
             <div class="field">
               <label>Придёте?</label>
               <div class="radio-group">
@@ -999,29 +1383,48 @@
                 </div>
               </div>
             </div>
-            <div class="field" id="guestCountField">
-              <label for="guests">Количество человек (включая вас)</label>
-              <select id="guests">
-                <option value="1">1 — только я</option>
-                <option value="2">2 — я + 1</option>
-                <option value="3">3 человека</option>
-                <option value="4">4 человека</option>
-                <option value="5+">5 и больше</option>
-              </select>
+
+            <div id="foodBlock">
+              <div class="field-group" style="gap:1.5rem">
+                <div class="field">
+                  <label for="allergy">Есть ли аллергия на продукты?</label>
+                  <textarea id="allergy" placeholder="Укажите аллергены, если есть…"></textarea>
+                </div>
+
+                <div class="field">
+                  <label>Что предпочитаете из алкоголя?</label>
+                  <div class="checkbox-group">
+                    <div class="check-opt">
+                      <input type="checkbox" id="alc-white" />
+                      <label for="alc-white">Вино белое</label>
+                    </div>
+                    <div class="check-opt">
+                      <input type="checkbox" id="alc-red" />
+                      <label for="alc-red">Вино красное</label>
+                    </div>
+                    <div class="check-opt">
+                      <input type="checkbox" id="alc-rum" />
+                      <label for="alc-rum">Ром</label>
+                    </div>
+                    <div class="check-opt">
+                      <input type="checkbox" id="alc-whisky" />
+                      <label for="alc-whisky">Виски</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="field">
-              <label for="dietary">Пожелания к меню или особенности</label>
-              <textarea id="dietary" placeholder="Вегетарианское, аллергии, пожелания…"></textarea>
-            </div>
+
             <div class="field">
               <label for="wishes">Пожелание молодым (по желанию)</label>
               <textarea id="wishes" placeholder="Тёплые слова…"></textarea>
             </div>
+
           </div>
           <button class="btn-submit" id="submitBtn">Отправить подтверждение</button>
         </div>
         <div class="form-success" id="formSuccess">
-          <div class="form-success-icon">V&A</div>
+          <div class="form-success-icon">V&amp;A</div>
           <p class="form-success-title">Получено, спасибо!</p>
           <p class="form-success-text">
             Мы рады, что вы будете с нами.<br>
@@ -1043,6 +1446,35 @@
   </footer>
 
   <script>
+    // ── Envelope animation ──
+    (function() {
+      const overlay = document.getElementById('envelope-overlay');
+      const flap    = document.getElementById('envFlap');
+      const card    = document.getElementById('envCard');
+      const seal    = document.getElementById('envSeal');
+
+      // Open flap after short pause
+      setTimeout(() => {
+        seal.classList.add('hide');
+        flap.classList.add('open');
+      }, 700);
+
+      // Card rises out of envelope
+      setTimeout(() => {
+        card.classList.add('rise');
+      }, 1700);
+
+      // Fade overlay away
+      setTimeout(() => {
+        overlay.classList.add('hide');
+      }, 3000);
+
+      // Remove from DOM
+      setTimeout(() => {
+        overlay.style.display = 'none';
+      }, 4100);
+    })();
+
     // ── Custom cursor ──
     const cursor = document.getElementById('cursor');
     const ring   = document.getElementById('cursorRing');
@@ -1071,7 +1503,7 @@
 
     // ── Countdown ──
     function updateCD() {
-      const target = new Date('2026-08-27T13:00:00+07:00');
+      const target = new Date('2026-08-27T16:30:00+07:00');
       const diff = target - new Date();
       if (diff <= 0) {
         ['cd-days','cd-hours','cd-min','cd-sec'].forEach(id => document.getElementById(id).textContent = '0');
@@ -1091,33 +1523,39 @@
     document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
     // ── RSVP attend toggle ──
-    const yesRadio = document.getElementById('yes');
-    const noRadio  = document.getElementById('no');
-    const guestField = document.getElementById('guestCountField');
-    function toggleGuests() {
-      guestField.style.display = noRadio.checked ? 'none' : 'flex';
+    const yesRadio     = document.getElementById('yes');
+    const noRadio      = document.getElementById('no');
+    const foodBlock    = document.getElementById('foodBlock');
+    const companionFld = document.getElementById('companionField');
+
+    function toggleAttend() {
+      const attending = yesRadio.checked;
+      foodBlock.style.display    = attending ? 'block' : 'none';
+      companionFld.style.display = attending ? 'flex'  : 'none';
     }
-    yesRadio.addEventListener('change', toggleGuests);
-    noRadio.addEventListener('change', toggleGuests);
+    yesRadio.addEventListener('change', toggleAttend);
+    noRadio.addEventListener('change', toggleAttend);
 
     // ── Form submit (localStorage) ──
     document.getElementById('submitBtn').addEventListener('click', () => {
-      const name    = document.getElementById('name').value.trim();
-      const attend  = document.querySelector('input[name="attend"]:checked').value;
-      const guests  = attend === 'yes' ? document.getElementById('guests').value : '0';
-      const dietary = document.getElementById('dietary').value.trim();
-      const wishes  = document.getElementById('wishes').value.trim();
+      const name      = document.getElementById('name').value.trim();
+      const attend    = document.querySelector('input[name="attend"]:checked').value;
+      const companion = attend === 'yes' ? document.getElementById('companion').value.trim() : '';
+      const allergy   = attend === 'yes' ? document.getElementById('allergy').value.trim() : '';
+      const alcohol   = attend === 'yes' ? ['alc-white','alc-red','alc-rum','alc-whisky']
+        .filter(id => document.getElementById(id).checked)
+        .map(id => document.querySelector('label[for="'+id+'"]').textContent)
+        .join(', ') : '';
+      const wishes    = document.getElementById('wishes').value.trim();
 
       if (!name) { document.getElementById('name').focus(); return; }
 
-      // Save to localStorage as a simple log
-      const entry = { name, attend, guests, dietary, wishes, ts: new Date().toISOString() };
+      const entry = { name, attend, companion, allergy, alcohol, wishes, ts: new Date().toISOString() };
       const all = JSON.parse(localStorage.getItem('rsvp_entries') || '[]');
       all.push(entry);
       localStorage.setItem('rsvp_entries', JSON.stringify(all));
 
-      // Show success
-      document.getElementById('formBody').style.display  = 'none';
+      document.getElementById('formBody').style.display = 'none';
       const success = document.getElementById('formSuccess');
       if (attend === 'no') {
         success.querySelector('.form-success-title').textContent = 'Жаль, что не получится';
