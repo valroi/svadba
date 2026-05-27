@@ -365,6 +365,43 @@
       position: relative;
       overflow: hidden;
     }
+    /* мягкий «дышащий» световой блик */
+    .hero::after {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 700px 500px at 50% 30%, rgba(255, 240, 220, 0.35), transparent 60%),
+        radial-gradient(ellipse 600px 400px at 80% 80%, rgba(218, 169, 163, 0.18), transparent 70%);
+      pointer-events: none;
+      animation: heroBreath 7s ease-in-out infinite;
+      z-index: 1;
+    }
+    @keyframes heroBreath {
+      0%, 100% { opacity: 0.65; transform: scale(1); }
+      50%       { opacity: 1;    transform: scale(1.05); }
+    }
+
+    /* Мерцающие искры на hero */
+    .sparkles { position: absolute; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
+    .sparkle {
+      position: absolute;
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--gold-light) 0%, var(--gold) 40%, transparent 70%);
+      box-shadow: 0 0 8px var(--gold-light);
+      opacity: 0;
+      animation: sparkleTwinkle var(--d, 4s) ease-in-out infinite;
+      animation-delay: var(--dly, 0s);
+    }
+    .sparkle.big { width: 6px; height: 6px; box-shadow: 0 0 14px var(--gold-light); }
+    .sparkle.rose {
+      background: radial-gradient(circle, #f5d4cf 0%, var(--rose-muted) 40%, transparent 70%);
+      box-shadow: 0 0 10px var(--rose-muted);
+    }
+    @keyframes sparkleTwinkle {
+      0%, 100% { opacity: 0; transform: scale(.4); }
+      50%       { opacity: .9; transform: scale(1.2); }
+    }
     .hero-bg-text {
       position: absolute;
       top: 50%; left: 50%;
@@ -725,6 +762,13 @@
     }
     .footer-place { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.1rem; color: rgba(168,196,160,0.7); margin-top: 0.4rem; }
 
+    /* Лёгкое усиление читаемости основных body-текстов */
+    .info-card-text, .timeline-desc, .location-desc, .location-detail-sub, .rsvp-intro-text {
+      font-size: clamp(0.93rem, 1.7vw, 1.02rem);
+      line-height: 1.7;
+    }
+    .rem-li .v { font-size: 1.2rem; line-height: 1.45; }
+
     /* REVEAL */
     .reveal { opacity: 0; transform: translateY(24px); transition: opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1); }
     .reveal.visible { opacity: 1; transform: translateY(0); }
@@ -896,7 +940,7 @@
               <em>&amp;</em>
               Алина
             </h3>
-            <p class="fold-sub">Соузга · Финские дачи</p>
+            <p class="fold-sub">«Финские дачи» · Алтай</p>
           </div>
         </div>
 
@@ -916,6 +960,7 @@
     <!-- HERO -->
     <section class="hero">
       <div class="hero-bg-text" aria-hidden="true">2026</div>
+      <div class="sparkles" id="sparkles" aria-hidden="true"></div>
       <div class="hero-main">
         <p class="hero-eyebrow">Приглашение на свадьбу</p>
         <h1 class="hero-name" aria-label="Валера и Алина">
@@ -931,7 +976,7 @@
       </div>
       <div class="hero-meta">
         <div class="hero-meta-item"><span class="hero-meta-label">Дата</span><span class="hero-meta-value">27 августа 2026</span></div>
-        <div class="hero-meta-item"><span class="hero-meta-label">Место</span><span class="hero-meta-value">Финские дачи, Соузга</span></div>
+        <div class="hero-meta-item"><span class="hero-meta-label">Место</span><span class="hero-meta-value">«Финские дачи»</span></div>
         <div class="hero-meta-item"><span class="hero-meta-label">Сбор гостей</span><span class="hero-meta-value">16:30</span></div>
         <div class="hero-meta-item"><span class="hero-meta-label">Начало</span><span class="hero-meta-value">17:00</span></div>
         <div class="hero-scroll"><div class="hero-scroll-line"></div><span class="hero-scroll-text">листать</span></div>
@@ -957,8 +1002,8 @@
       <div class="info-grid">
         <div class="info-card reveal"><span class="info-card-num" aria-hidden="true">01</span><p class="info-card-label">Дата</p><h3 class="info-card-title">27 августа 2026</h3><p class="info-card-text">Четверг. Конец лета, горный воздух и незабываемый закат над Алтаем.</p></div>
         <div class="info-card reveal reveal-delay-1"><span class="info-card-num" aria-hidden="true">02</span><p class="info-card-label">Сбор гостей</p><h3 class="info-card-title">16:30</h3><p class="info-card-text">Приезжайте чуть раньше — знакомимся, игристое и welcome-зона уже ждут.</p></div>
-        <div class="info-card reveal reveal-delay-2"><span class="info-card-num" aria-hidden="true">03</span><p class="info-card-label">Место</p><h3 class="info-card-title">Турбаза<br>«Финские дачи»</h3><p class="info-card-text">Соузга, Республика Алтай. Среди гор, леса и живой воды.</p></div>
-        <div class="info-card reveal reveal-delay-3"><span class="info-card-num" aria-hidden="true">04</span><p class="info-card-label">Дресс-код</p><h3 class="info-card-title">Природные тона</h3><p class="info-card-text">Бежевый, терракота, хаки, коричневый, белый. Мы в горах — будьте в своей стихии.</p></div>
+        <div class="info-card reveal reveal-delay-2"><span class="info-card-num" aria-hidden="true">03</span><p class="info-card-label">Место</p><h3 class="info-card-title">«Финские<br>дачи»</h3><p class="info-card-text">Республика Алтай. Среди гор, хвойного леса и живой воды.</p></div>
+        <div class="info-card reveal reveal-delay-3"><span class="info-card-num" aria-hidden="true">04</span><p class="info-card-label">Дресс-код</p><h3 class="info-card-title">Природные тона</h3><p class="info-card-text">Слоновая кость, пыльная роза, бежевый, шампань, шоколадный, шалфей, фисташковый.</p></div>
       </div>
     </section>
 
@@ -976,19 +1021,18 @@
     <section class="location-section">
       <div>
         <p class="section-eyebrow reveal">Как добраться</p>
-        <p class="location-address reveal reveal-delay-1">Турбаза<br>«Финские дачи»,<br>Соузга</p>
-        <p class="location-desc reveal reveal-delay-2">Республика Алтай, Майминский район, село Соузга.<br>Турбаза расположена в живописном месте в хвойном лесу,<br>в нескольких минутах от слияния рек Катунь и Майма.</p>
-        <a class="btn-primary reveal reveal-delay-3" href="https://yandex.ru/maps/?text=Турбаза+Финские+дачи+Соузга+Алтай" target="_blank" rel="noopener">
+        <p class="location-address reveal reveal-delay-1">«Финские<br>дачи»</p>
+        <p class="location-desc reveal reveal-delay-2">Республика Алтай, Майминский район.<br>Уединённое место в хвойном лесу,<br>в нескольких минутах от слияния рек Катунь и Майма.</p>
+        <a class="btn-primary reveal reveal-delay-3" href="https://yandex.ru/maps/?text=Финские+дачи+Алтай" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
           Открыть карту
         </a>
       </div>
       <div class="location-right reveal">
         <ul class="location-details-list">
-          <li class="location-detail-item"><span class="location-detail-key">Адрес</span><span class="location-detail-val">с. Соузга, ул. Лесная</span><span class="location-detail-sub">Майминский район, Республика Алтай</span></li>
-          <li class="location-detail-item"><span class="location-detail-key">Ориентир</span><span class="location-detail-val">Поворот с Чуйского тракта</span><span class="location-detail-sub">Указатель «Соузга» — въезд в лес</span></li>
+          <li class="location-detail-item"><span class="location-detail-key">Адрес</span><span class="location-detail-val">ул. Лесная</span><span class="location-detail-sub">Майминский район, Республика Алтай</span></li>
+          <li class="location-detail-item"><span class="location-detail-key">Ориентир</span><span class="location-detail-val">Поворот с Чуйского тракта</span><span class="location-detail-sub">Указатель — въезд в хвойный лес</span></li>
           <li class="location-detail-item"><span class="location-detail-key">Парковка</span><span class="location-detail-val">Есть на территории</span><span class="location-detail-sub">Бесплатно для гостей</span></li>
-          <li class="location-detail-item"><span class="location-detail-key">Трансфер</span><span class="location-detail-val">Уточните заранее</span><span class="location-detail-sub">Напишите нам, организуем</span></li>
         </ul>
       </div>
     </section>
@@ -1013,10 +1057,10 @@
       <div class="rsvp-header reveal">
         <p class="section-eyebrow">Подтверждение</p>
         <h2 class="section-heading">Вы будете<br><em>с нами?</em></h2>
-        <p class="rsvp-intro-text">Пожалуйста, подтвердите своё присутствие до <span class="rsvp-deadline">1 августа 2026 года.</span></p>
+        <p class="rsvp-intro-text">Пожалуйста, подтвердите присутствие до&nbsp;<span class="rsvp-deadline">31&nbsp;июля&nbsp;2026</span></p>
         <a class="tg-link" href="https://t.me/valroi123" target="_blank" rel="noopener">
-          Telegram @valroi123
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
+          Написать в Telegram
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M17 7H7M17 7v10"/></svg>
         </a>
       </div>
       <div class="rsvp-form-wrap">
@@ -1027,7 +1071,7 @@
               <div class="field"><label for="name">Представьтесь</label><input type="text" id="name" placeholder="Имя и фамилия" autocomplete="name" /></div>
               <div class="field" id="companionField"><label for="companion">С кем планируете быть?</label><input type="text" id="companion" placeholder="Напишите по именам…" /></div>
               <div class="field">
-                <label>Придёте?</label>
+                <label>Планируете ли вы присутствовать?</label>
                 <div class="radio-group">
                   <div class="radio-opt"><input type="radio" name="attend" id="yes" value="yes" checked /><label for="yes">Буду</label></div>
                   <div class="radio-opt"><input type="radio" name="attend" id="no" value="no" /><label for="no">Не смогу</label></div>
@@ -1060,7 +1104,7 @@
       <p class="footer-names">Валера <span>&amp;</span> Алина</p>
       <div class="footer-right">
         <p class="footer-date">27 · 08 · 2026</p>
-        <p class="footer-place">Горный Алтай · Соузга</p>
+        <p class="footer-place">Горный Алтай</p>
       </div>
     </footer>
 
@@ -1081,7 +1125,7 @@
         </li>
         <li class="rem-li">
           <div class="ic">📍</div>
-          <div><div class="k">Где</div><div class="v">Турбаза «Финские дачи»<br>с. Соузга, Алтай<br><a href="https://yandex.ru/maps/?text=Турбаза+Финские+дачи+Соузга+Алтай" target="_blank" rel="noopener">Открыть на карте →</a></div></div>
+          <div><div class="k">Где</div><div class="v">«Финские дачи» · Алтай<br><a href="https://yandex.ru/maps/?text=Финские+дачи+Алтай" target="_blank" rel="noopener">Открыть на карте →</a></div></div>
         </li>
         <li class="rem-li">
           <div class="ic">🕒</div>
@@ -1089,20 +1133,16 @@
         </li>
         <li class="rem-li">
           <div class="ic">👗</div>
-          <div><div class="k">Дресс-код</div><div class="v">Бежевый · терракота · хаки<br>коричневый · белый</div></div>
-        </li>
-        <li class="rem-li">
-          <div class="ic">🎒</div>
-          <div><div class="k">Что взять</div><div class="v">Тёплую кофту (горы вечером!),<br>удобную обувь, заряд телефона<br>и хорошее настроение</div></div>
+          <div><div class="k">Дресс-код</div><div class="v">Слоновая кость · пыльная роза<br>бежевый · шампань · шоколадный<br>шалфей · фисташковый</div></div>
         </li>
         <li class="rem-li">
           <div class="ic">📞</div>
-          <div><div class="k">Связь</div><div class="v"><a href="https://t.me/valroi123" target="_blank" rel="noopener">Telegram @valroi123</a></div></div>
+          <div><div class="k">Связь</div><div class="v"><a href="https://t.me/valroi123" target="_blank" rel="noopener">Написать в Telegram</a></div></div>
         </li>
       </ul>
 
       <div class="rem-actions">
-        <a class="rem-btn primary" href="https://yandex.ru/maps/?text=Турбаза+Финские+дачи+Соузга+Алтай" target="_blank" rel="noopener">Маршрут</a>
+        <a class="rem-btn primary" href="https://yandex.ru/maps/?text=Финские+дачи+Алтай" target="_blank" rel="noopener">Маршрут</a>
         <a class="rem-btn ghost" id="addCalBtn" href="#">В календарь</a>
       </div>
       <p class="rem-foot">Сохраните этот экран — здесь всё, что нужно знать</p>
@@ -1167,15 +1207,32 @@
     showMusicBtn();
     toggleMusic(true);                    // user gesture → autoplay ok
     setTimeout(() => spawnPetals(), 1100);
+    // Дать пользователю 2.5 секунды насладиться раскрытым приглашением
     setTimeout(() => {
       envScreen.classList.add('fade-out');
       document.body.classList.remove('locked');
-    }, 2400);
-    setTimeout(() => { envScreen.style.display = 'none'; }, 3500);
+    }, 4400);
+    setTimeout(() => { envScreen.style.display = 'none'; }, 5700);
   }
 
   foldCard.addEventListener('click', openFold);
   envCta.addEventListener('click', (e) => { e.stopPropagation(); openFold(); });
+
+  /* ═════════ SPARKLES (hero мерцание) ═════════ */
+  (function(){
+    const root = document.getElementById('sparkles');
+    if (!root) return;
+    const N = 36;
+    for (let i = 0; i < N; i++){
+      const s = document.createElement('div');
+      s.className = 'sparkle' + (i % 4 === 0 ? ' big' : '') + (i % 5 === 0 ? ' rose' : '');
+      s.style.left = Math.random() * 100 + '%';
+      s.style.top  = Math.random() * 100 + '%';
+      s.style.setProperty('--d',   (3 + Math.random() * 4).toFixed(1) + 's');
+      s.style.setProperty('--dly', (Math.random() * 6).toFixed(1) + 's');
+      root.appendChild(s);
+    }
+  })();
 
   /* ═════════ COUNTDOWN ═════════ */
   function updateCD() {
@@ -1327,7 +1384,7 @@
       'DTSTART:20260827T093000Z',  // 16:30 +07:00 = 09:30 UTC
       'DTEND:20260827T160000Z',
       'SUMMARY:Свадьба Валеры и Алины',
-      'LOCATION:Турбаза Финские дачи, Соузга, Алтай',
+      'LOCATION:Финские дачи, Алтай',
       'DESCRIPTION:Сбор гостей в 16:30. Церемония в 17:00. Дресс-код: природные тона.',
       'END:VEVENT',
       'END:VCALENDAR'
