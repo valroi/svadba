@@ -1101,16 +1101,31 @@
 
   async function sendSheets(data){
     if (!SHEETS_URL) return { ok: false, skipped: true, reason: 'no-sheets-url' };
+    const body = JSON.stringify(data);
+    // 1) navigator.sendBeacon — самый надёжный путь к Apps Script
+    //    (фоновая отправка, без CORS-preflight, переживает редирект 302)
     try {
-      // text/plain → simple request → нет CORS-prefligh
+      if (navigator.sendBeacon) {
+        const blob = new Blob([body], { type: 'text/plain;charset=utf-8' });
+        const sent = navigator.sendBeacon(SHEETS_URL, blob);
+        console.log('[sheets] sendBeacon →', sent);
+        if (sent) return { ok: true, via: 'beacon' };
+      }
+    } catch (err) { console.warn('[sheets] beacon failed', err); }
+
+    // 2) fetch no-cors как fallback
+    try {
       await fetch(SHEETS_URL, {
-        method: 'POST',
-        mode: 'no-cors',
+        method: 'POST', mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(data)
+        body, keepalive: true
       });
-      return { ok: true };
-    } catch(err){ return { ok: false, error: String(err) }; }
+      console.log('[sheets] fetch sent (opaque)');
+      return { ok: true, via: 'fetch' };
+    } catch (err) {
+      console.error('[sheets] fetch failed', err);
+      return { ok: false, error: String(err) };
+    }
   }
 
   /* ═════════ FORM SUBMIT ═════════ */
@@ -1136,13 +1151,13 @@
       all.push(entry); localStorage.setItem('rsvp_entries', JSON.stringify(all));
     } catch(_){}
 
-    // Параллельно — TG + Sheets (не блокируем UX, если упадёт)
-    Promise.allSettled([ sendTelegram(entry), sendSheets(entry) ]).then(res => {
-      console.log('[rsvp] send results', res);
-    });
+    // Сначала ВЫСТРЕЛИВАЕМ запросы (sendBeacon — fire-and-forget, fetch с keepalive)
+    const sendPromise = Promise.allSettled([ sendTelegram(entry), sendSheets(entry) ]);
+    sendPromise.then(res => console.log('[rsvp] send results', res));
 
-    // Анимация закрытия → памятка
-    showReminder(name);
+    // Дать браузеру 250 мс на инициацию запросов до анимации закрытия,
+    // чтобы fetch успел стартовать (sendBeacon в этом не нуждается)
+    setTimeout(() => showReminder(name), 250);
   });
 
   /* ═════════ CLOSE SITE + REMINDER ═════════ */
