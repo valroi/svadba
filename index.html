@@ -118,153 +118,196 @@
       z-index: 2;
     }
 
-    /* Конверт — ЗАКРЫТЫЙ, текст внутри не виден */
-    .envelope-wrap { perspective: 1400px; position: relative; z-index: 2; user-select: none; -webkit-user-select: none; }
-    .envelope {
+    /* ── TRI-FOLD письмо ── */
+    .fold-wrap {
+      perspective: 1600px;
       position: relative;
-      width: min(440px, 86vw);
-      height: min(290px, 60vw);
+      z-index: 2;
+      user-select: none;
+      -webkit-user-select: none;
+      padding: 0;
+    }
+    /* Контейнер: высота = высота одной панели (закрытое состояние) */
+    .fold-card {
+      position: relative;
+      width: min(420px, 86vw);
+      height: min(220px, 48vw);
+      transform-style: preserve-3d;
       cursor: pointer;
-      filter: drop-shadow(0 22px 48px rgba(44,40,37,0.15)) drop-shadow(0 6px 16px rgba(44,40,37,0.08));
-      transition: filter .4s, transform .4s;
+      transition: height 1s .55s cubic-bezier(.4,0,.2,1);
+      filter: drop-shadow(0 22px 48px rgba(44,40,37,0.18)) drop-shadow(0 6px 16px rgba(44,40,37,0.09));
     }
-    .envelope:hover { transform: translateY(-4px); filter: drop-shadow(0 30px 60px rgba(44,40,37,0.2)) drop-shadow(0 8px 20px rgba(44,40,37,0.1)); }
-    .envelope.opened { cursor: default; }
+    .fold-card.opened {
+      height: calc(min(220px, 48vw) * 3);
+      cursor: default;
+    }
+    .fold-card:hover:not(.opened) {
+      filter: drop-shadow(0 30px 60px rgba(44,40,37,0.22)) drop-shadow(0 8px 20px rgba(44,40,37,0.1));
+    }
 
-    /* Тело конверта — БЕЛОЕ, без текста снаружи */
-    .env-body {
-      position: absolute; inset: 0;
-      background: var(--white);
-      border: 1px solid var(--linen);
-      overflow: hidden;
-    }
-    /* "бумажные" диагональные линии (нижний треугольник снизу + боковые) */
-    .env-body::before {
-      content: '';
-      position: absolute; inset: 0;
+    /* Все три панели */
+    .fold-panel {
+      position: absolute;
+      left: 0; right: 0;
+      top: 0;
+      height: min(220px, 48vw);
       background:
-        linear-gradient(to top right, transparent 49.6%, #ede5d8 49.6%, #ede5d8 50.4%, transparent 50.4%),
-        linear-gradient(to top left,  transparent 49.6%, #ede5d8 49.6%, #ede5d8 50.4%, transparent 50.4%);
+        radial-gradient(ellipse at 50% 40%, #fdfaf3 0%, #f5ecdb 100%);
+      border: 1px solid #dccaae;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.6);
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      transition: transform 1s cubic-bezier(.4,0,.2,1);
+    }
+    /* Золотая «винтажная» рамка у каждой панели */
+    .fold-panel::before {
+      content: '';
+      position: absolute; inset: 8px;
+      border: 1px solid rgba(196,162,106,0.45);
       pointer-events: none;
+    }
+    .fold-panel::after {
+      content: '';
+      position: absolute; inset: 12px;
+      border: 1px solid rgba(196,162,106,0.18);
+      pointer-events: none;
+    }
+
+    /* Верхняя — лежит за центром, перевёрнута; раскрывается ВВЕРХ */
+    .fold-top {
+      transform-origin: bottom center;
+      transform: rotateX(-180deg) translateZ(-1px);
       z-index: 1;
     }
-    /* Нижний треугольный «карман» поверх карточки, чтобы её низ был спрятан */
-    .env-pocket {
-      position: absolute;
-      left: -1px; right: -1px; bottom: -1px;
-      height: 56%;
-      background: var(--white);
-      border: 1px solid var(--linen);
-      border-top: 0;
-      clip-path: polygon(0 100%, 50% 0, 100% 100%);
-      z-index: 4;
-      pointer-events: none;
+    .fold-card.opened .fold-top {
+      transform: translateY(-100%) rotateX(0deg);
     }
-    .env-pocket::before {
-      content: '';
-      position: absolute; inset: 0;
+    /* Нижняя — лежит за центром, перевёрнута; раскрывается ВНИЗ */
+    .fold-bot {
+      transform-origin: top center;
+      transform: rotateX(180deg) translateZ(-1px);
+      z-index: 1;
+    }
+    .fold-card.opened .fold-bot {
+      transform: translateY(100%) rotateX(0deg);
+    }
+    /* Центральная — всегда видна, на переднем плане */
+    .fold-mid {
+      z-index: 3;
+    }
+    /* Тени-«складки» сверху и снизу центральной (видно когда закрыто) */
+    .fold-mid .fold-line {
+      position: absolute;
+      left: 0; right: 0;
+      height: 12px;
       background:
-        linear-gradient(to top right, transparent 49.6%, #ede5d8 49.6%, #ede5d8 50.4%, transparent 50.4%),
-        linear-gradient(to top left,  transparent 49.6%, #ede5d8 49.6%, #ede5d8 50.4%, transparent 50.4%);
+        linear-gradient(180deg, rgba(0,0,0,0.06), transparent);
+      pointer-events: none;
+      z-index: 2;
+      transition: opacity .5s;
     }
+    .fold-mid .fold-line.top    { top: 0;    background: linear-gradient(180deg, rgba(60,40,20,0.12), transparent); }
+    .fold-mid .fold-line.bottom { bottom: 0; background: linear-gradient(0deg,   rgba(60,40,20,0.12), transparent); transform: scaleY(1); }
+    .fold-card.opened .fold-line { opacity: 0; }
 
-    /* Карточка ВНУТРИ конверта — видна ПОСЛЕ открытия (rise) */
-    .env-card {
-      position: absolute;
-      left: 16px; right: 16px;
-      bottom: 14px;
-      height: calc(100% - 28px);
-      background: var(--white);
-      border: 1px solid #f0e8df;
+    /* Контент панелей */
+    .fold-content {
+      position: absolute; inset: 24px;
       display: flex; flex-direction: column;
       align-items: center; justify-content: center;
-      gap: 6px;
-      z-index: 2;
-      transform: translateY(20px);
-      transition: transform 1.1s .2s cubic-bezier(.16,1,.3,1);
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(44,40,37,.05);
+      text-align: center; gap: 4px;
+      z-index: 1;
     }
-    .env-card.rise { transform: translateY(-72px); }
-    .env-card::before {
-      content: '';
-      position: absolute; top: 0; left: 18px; right: 18px; height: 2px;
-      background: linear-gradient(90deg, transparent, var(--rose-muted), transparent);
-    }
-    .env-card::after {
-      content: '';
-      position: absolute; bottom: 0; left: 18px; right: 18px; height: 1px;
-      background: linear-gradient(90deg, transparent, var(--linen), transparent);
-    }
-    .env-card-eyebrow {
-      font-size: clamp(0.45rem, 1.1vw, 0.55rem);
+    .fold-eyebrow {
+      font-size: clamp(0.5rem, 1.2vw, 0.6rem);
       letter-spacing: 0.5em;
       text-transform: uppercase;
-      color: var(--taupe);
-    }
-    .env-card-names {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(1.6rem, 5.5vw, 2.4rem);
+      color: var(--gold);
       font-weight: 400;
+      margin-bottom: 6px;
+    }
+    .fold-orn {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      color: var(--gold);
+      font-style: italic;
+      line-height: 1;
+      margin: 4px 0;
+      opacity: .9;
+    }
+    .fold-date-big {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.5rem, 4.5vw, 2.2rem);
+      font-style: italic; font-weight: 400;
       color: var(--ink);
-      text-align: center;
+      letter-spacing: 0.05em;
       line-height: 1.1;
     }
-    .env-card-names em {
-      font-style: italic;
-      color: var(--rose);
-      font-size: 0.7em;
-      display: block;
-      margin: 2px 0;
-    }
-    .env-card-date {
-      font-size: 0.5rem;
+    .fold-sub {
+      font-size: clamp(0.5rem, 1.2vw, 0.6rem);
       letter-spacing: 0.45em;
       text-transform: uppercase;
       color: var(--taupe);
-      margin-top: 4px;
+      margin-top: 6px;
+    }
+    .fold-divider {
+      display: flex; align-items: center; gap: 10px;
+      margin: 4px 0; opacity: .55;
+    }
+    .fold-divider span { width: 22px; height: 1px; background: var(--gold); }
+    .fold-divider em { font-style: normal; color: var(--gold); font-size: 9px; }
+
+    /* Большие имена на нижней панели */
+    .fold-names {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 400;
+      font-size: clamp(1.8rem, 6vw, 2.8rem);
+      color: var(--ink); line-height: 1.05;
+    }
+    .fold-names em {
+      font-style: italic; color: var(--rose);
+      font-size: 0.55em; display: block; margin: 2px 0;
     }
 
-    /* Клапан конверта (треугольник сверху) — поверх всего, закрывает карточку */
-    .env-flap {
-      position: absolute;
-      top: -1px; left: -1px; right: -1px;
-      height: 54%;
-      background: var(--blush);
-      border: 1px solid var(--linen);
-      clip-path: polygon(0 0, 50% 100%, 100% 0);
-      transform-origin: top center;
-      transform-style: preserve-3d;
-      z-index: 5;
-      transition: transform 1s cubic-bezier(.4,0,.2,1);
+    /* На верхней — «приглашение» */
+    .fold-invite-eyebrow {
+      font-size: clamp(0.5rem, 1.2vw, 0.6rem);
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 4px;
     }
-    .env-flap::before {
-      content: ''; position: absolute; inset: 0;
-      background: linear-gradient(180deg, rgba(255,255,255,0.25) 0%, transparent 60%);
-    }
-    .env-flap.open {
-      transform: rotateX(-180deg);
+    .fold-invite-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: clamp(1.5rem, 4.5vw, 2.2rem);
+      color: var(--ink);
+      line-height: 1.1;
     }
 
-    /* Восковая печать V&A на клапане */
-    .env-seal {
+    /* Восковая печать поверх центральной — исчезает при открытии */
+    .fold-seal {
       position: absolute;
-      top: 46%; left: 50%;
+      top: 100%; left: 50%;
       transform: translate(-50%, -50%);
-      width: 38px; height: 38px;
-      background: radial-gradient(circle at 35% 30%, var(--rose-muted), var(--rose) 70%);
+      width: 56px; height: 56px;
+      background: radial-gradient(circle at 35% 30%, #d99691, #a8423d 70%);
       border-radius: 50%;
-      z-index: 6;
+      z-index: 5;
       display: flex; align-items: center; justify-content: center;
       font-family: 'Cormorant Garamond', serif;
-      font-size: 0.7rem; font-style: italic;
-      color: var(--white);
-      box-shadow: 0 2px 10px rgba(192,128,122,0.5), inset 0 1px 0 rgba(255,255,255,0.3);
-      transition: opacity .4s .2s, transform .4s;
+      font-size: 1.1rem; font-style: italic;
+      color: rgba(255,255,255,.95);
+      box-shadow:
+        0 4px 18px rgba(168,66,61,0.45),
+        inset 0 1px 1px rgba(255,255,255,.35),
+        inset 0 -3px 4px rgba(0,0,0,.25);
+      transition: opacity .5s .1s, transform .5s;
     }
-    .env-seal.hide { opacity: 0; transform: translate(-50%, -50%) scale(.7); }
+    .fold-card.opened .fold-seal { opacity: 0; transform: translate(-50%, -50%) scale(.55); }
 
-    /* CTA-кнопка под конвертом */
+    /* CTA-кнопка снизу */
     .env-cta {
       display: inline-flex; align-items: center; gap: 12px;
       padding: 14px 36px;
@@ -711,20 +754,46 @@
 
     <p class="env-eyebrow">Горный Алтай · 27 августа 2026</p>
 
-    <div class="envelope-wrap">
-      <div class="envelope" id="envelope">
-        <div class="env-body"></div>
-        <div class="env-card" id="envCard">
-          <p class="env-card-eyebrow">Приглашение на свадьбу</p>
-          <h2 class="env-card-names">
-            Валера
-            <em>&amp; Алина</em>
-          </h2>
-          <p class="env-card-date">27 · VIII · 2026 · Соузга</p>
+    <div class="fold-wrap">
+      <div class="fold-card" id="foldCard">
+
+        <!-- Верхняя панель: «Приглашение на свадьбу» (видно ТОЛЬКО после раскрытия) -->
+        <div class="fold-panel fold-top">
+          <div class="fold-content">
+            <p class="fold-invite-eyebrow">с любовью</p>
+            <p class="fold-invite-title">Приглашаем вас<br>на нашу свадьбу</p>
+            <div class="fold-divider"><span></span><em>❦</em><span></span></div>
+          </div>
         </div>
-        <div class="env-pocket"></div>
-        <div class="env-flap" id="envFlap"></div>
-        <div class="env-seal" id="envSeal">V&amp;A</div>
+
+        <!-- Центральная панель: ОБЛОЖКА — никаких имён, только дата и декор -->
+        <div class="fold-panel fold-mid">
+          <div class="fold-line top"></div>
+          <div class="fold-line bottom"></div>
+          <div class="fold-content">
+            <p class="fold-eyebrow">Save the Date</p>
+            <div class="fold-orn">❦</div>
+            <h2 class="fold-date-big">27 · VIII · 2026</h2>
+            <div class="fold-divider"><span></span><em>✦</em><span></span></div>
+            <p class="fold-sub">Горный Алтай</p>
+          </div>
+          <!-- Восковая печать на нижнем стыке -->
+          <div class="fold-seal">V<span style="opacity:.5;margin:0 1px">·</span>A</div>
+        </div>
+
+        <!-- Нижняя панель: имена (видно ТОЛЬКО после раскрытия) -->
+        <div class="fold-panel fold-bot">
+          <div class="fold-content">
+            <p class="fold-eyebrow">В главных ролях</p>
+            <h3 class="fold-names">
+              Валера
+              <em>&amp;</em>
+              Алина
+            </h3>
+            <p class="fold-sub">Соузга · Финские дачи</p>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -732,7 +801,7 @@
       Открыть приглашение
       <span class="env-cta-arrow">›</span>
     </button>
-    <p class="env-hint" id="envHint">или нажмите на конверт</p>
+    <p class="env-hint" id="envHint">или нажмите на письмо</p>
   </div>
 
   <!-- ══ SITE WRAP ══ -->
@@ -957,55 +1026,50 @@
   }
   musicBtn.addEventListener('click', () => toggleMusic());
 
-  /* ═════════ ENVELOPE: click to open ═════════ */
+  /* ═════════ TRI-FOLD: click to open ═════════ */
   const envScreen = document.getElementById('env-screen');
-  const envelope  = document.getElementById('envelope');
-  const envFlap   = document.getElementById('envFlap');
-  const envCard   = document.getElementById('envCard');
-  const envSeal   = document.getElementById('envSeal');
+  const foldCard  = document.getElementById('foldCard');
   const envCta    = document.getElementById('envCta');
   const envHint   = document.getElementById('envHint');
   let opened = false;
 
   function spawnPetals(){
-    const rect = envelope.getBoundingClientRect();
+    const rect = foldCard.getBoundingClientRect();
     const cx = rect.left + rect.width / 2;
-    const cy = rect.top + rect.height * 0.3;
+    const cy = rect.top + rect.height / 2;
     const colors = ['#f2dcd5','#e8c8be','#dba9a3','#dcc08a','#a8c4a0'];
-    for (let i = 0; i < 20; i++){
+    for (let i = 0; i < 22; i++){
       const p = document.createElement('div');
       p.className = 'petal';
       p.style.background = colors[i % colors.length];
       p.style.left = cx + 'px'; p.style.top = cy + 'px';
-      p.style.setProperty('--dx', (Math.random()*400 - 200) + 'px');
-      p.style.setProperty('--dy', (Math.random()*180 + 60) + 'px');
+      p.style.setProperty('--dx', (Math.random()*440 - 220) + 'px');
+      p.style.setProperty('--dy', (Math.random()*200 + 80) + 'px');
       p.style.setProperty('--r', (Math.random()*720 - 360) + 'deg');
       envScreen.appendChild(p);
       requestAnimationFrame(() => p.classList.add('fly'));
-      setTimeout(() => p.remove(), 1700);
+      setTimeout(() => p.remove(), 1800);
     }
   }
 
-  function openEnvelope(){
+  function openFold(){
     if (opened) return;
     opened = true;
-    envelope.classList.add('opened');
+    foldCard.classList.add('opened');     // печать тает, панели раскрываются 3D-флипом
     envCta.classList.add('hide');
     envHint.classList.add('hide');
-    envSeal.classList.add('hide');
     showMusicBtn();
-    toggleMusic(true);                          // autoplay policy ok — user gesture
-    setTimeout(() => envFlap.classList.add('open'), 200);     // флип клапана
-    setTimeout(() => { envCard.classList.add('rise'); spawnPetals(); }, 1000); // карточка выезжает + лепестки
+    toggleMusic(true);                    // user gesture → autoplay ok
+    setTimeout(() => spawnPetals(), 1100);
     setTimeout(() => {
       envScreen.classList.add('fade-out');
       document.body.classList.remove('locked');
-    }, 2100);
-    setTimeout(() => { envScreen.style.display = 'none'; }, 3200);
+    }, 2400);
+    setTimeout(() => { envScreen.style.display = 'none'; }, 3500);
   }
 
-  envelope.addEventListener('click', openEnvelope);
-  envCta.addEventListener('click', (e) => { e.stopPropagation(); openEnvelope(); });
+  foldCard.addEventListener('click', openFold);
+  envCta.addEventListener('click', (e) => { e.stopPropagation(); openFold(); });
 
   /* ═════════ COUNTDOWN ═════════ */
   function updateCD() {
